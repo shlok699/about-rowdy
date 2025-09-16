@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev | Tg:-@ROWDY_SKY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="profile.jpg" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Lines Animation HTML -->
+  <div class="lines">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+  <!-- End Lines Animation HTML -->
+
+  <canvas id="starfield-canvas"></canvas>
+
+  <button class="activate-btn" id="activateBtn">
+    CLICK ME
+  </button>
+
+  <div class="content-wrapper" id="contentWrapper">
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="custom-header">
+      <div class="header-left">
+        <a class="header-name" href="https://t.me/aboutrowdy" target="_blank">未知 Rᴏᴡᴅʏ</a>
+      </div>
+      <nav class="nav-links">
+        <a href="#" onclick="window.location.reload(); return false;" class="nav-button">Home</a>
+        <a href="https://t.me/aboutrowdy" class="nav-button">Channel</a>
+      </nav>
+    </header>
+
+    <div class="main-content">
+      <div class="profile-section">
+        <div class="profile-container">
+          <img src="profile.jpg" alt="Profile picture">
+        </div>
+
+        <div class="content-section">
+          <h1>Hi, I'm <span>羅迪</span></h1>
+        <h2><span style="color:white;">I am </span><span id="typed-text"></span><span id="cursor">|</span></h2>
+          <p><b>
+            I'm just a curious soul with a passion for technology. What started as a hobby quickly became a journey of self-taught exploration – driven by necessity, fueled by fascination. While I lack formal training, I've acquired valuable skills through persistent learning and continue to deepen my expertise daily.
+          </b></p>
+
+          <div class="social-icons">
+            <a href="https://t.me/aboutrowdy" target="_blank" class="social-icon">
+              <i class="fas fa-paper-plane"></i>
+              <span>Telegram</span>
+            </a>
+            <a href="https://youtube.com/@madaraxobito1" target="_blank" class="social-icon">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </a>
+            <a href="https://instagram.com/mh74976" target="_blank" class="social-icon">
+              <i class="fab fa-instagram"></i>
+              <span>Instagram</span>
+            </a>
+            <div class="audio-control" id="audio-toggle">
+              <i class="fas fa-volume-high"></i>
+              <span id="audio-label">Sound</span>
+            </div>
+          </div>
+          <a href="Skills/" class="red-button">See More</a>
+          <p>
+        <div class="copyright">
+        © 2025 未知 Rᴏᴡᴅʏ. All Rights Reserved.   @ROWDY_SKY
+    </div>
+</body>
+</html>
+      </div>
+    </div>
+    <audio id="background-music" loop>
+      <source src="background-music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <script>
+    // Optimized JavaScript to reduce lag
+    document.addEventListener('DOMContentLoaded', function() {
+      const audio = document.getElementById('background-music');
+      const activateBtn = document.getElementById('activateBtn');
+      const contentWrapper = document.getElementById('contentWrapper');
+      const toggleBtn = document.getElementById('audio-toggle');
+      const audioLabel = document.getElementById('audio-label');
+      const audioIcon = toggleBtn.querySelector('i');
+
+      // Disable right-click
+      document.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Initial audio play attempt
+      document.body.addEventListener('click', () => {
+        audio.play().catch(e => console.log("Autoplay prevented:", e));
+      }, { once: true });
+
+      activateBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        // Request Fullscreen
+        const requestFullScreen = () => {
+          const el = document.documentElement;
+          if (el.requestFullscreen) el.requestFullscreen();
+          else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+          else if (el.msRequestFullscreen) el.msRequestFullscreen();
+        };
+        requestFullScreen();
+
+        activateBtn.style.transition = 'opacity 0.7s cubic-bezier(0.23, 1.08, 0.32, 1)';
+        activateBtn.style.opacity = "0";
+        
+        setTimeout(() => {
+          activateBtn.style.display = 'none';
+          contentWrapper.style.display = 'block';
+          void contentWrapper.offsetWidth; // Force reflow
+          contentWrapper.style.opacity = 1;
+          contentWrapper.style.transform = 'scale(1)';
+          initAnimations();
+          
+          if (!audio.muted) {
+            audioIcon.classList.replace('fa-volume-xmark', 'fa-volume-high');
+            audioLabel.textContent = "Sound";
+          } else {
+            audioIcon.classList.replace('fa-volume-high', 'fa-volume-xmark');
+            audioLabel.textContent = "No Sound";
+          }
+        }, 250);
+
+        // Play music
+        audio.play().catch(e => {
+          console.log("Audio play failed:", e);
+          audio.muted = true;
+          audio.play().then(() => {
+            audio.muted = false;
+            audioIcon.classList.replace('fa-volume-xmark', 'fa-volume-high');
+          }).catch(err => console.log("Muted audio play failed:", err));
+        });
+      });
+
+      toggleBtn.addEventListener('click', () => {
+        audio.muted = !audio.muted;
+        if(audio.muted) {
+          audioIcon.classList.replace('fa-volume-high', 'fa-volume-xmark');
+          audioLabel.textContent = "No Sound";
+        } else {
+          audioIcon.classList.replace('fa-volume-xmark', 'fa-volume-high');
+          audioLabel.textContent = "Sound";
+        }
+      });
+
+      // Optimized animations initialization
+      function initAnimations() {
+        // Typing animation
+        const roles = ["尺ㄖ山ᗪㄚ", "Gamer", "Web Developer", "Ethical Hacker", "Reverse Engineer", "UI/UX Designer"];
+        
+        let current=0, charIndex=0, isDeleting=false;
+        const typedText=document.getElementById("typed-text"),
+              cursor=document.getElementById("cursor");
+
+        function typeEffect(){
+          const role=roles[current];
+          charIndex += isDeleting?-1:1;
+          typedText.textContent = role.substring(0,charIndex);
+
+          if(!isDeleting && charIndex===role.length) {
+            setTimeout(()=>isDeleting=true,1500);
+          } else if(isDeleting && charIndex===0){
+            isDeleting=false;
+            current=(current+1)%roles.length;
+          }
+          window.typeEffectInterval = setTimeout(typeEffect, isDeleting?60:100);
+        }
+        typeEffect();
+
+        // Starfield animation
+        const starCanvas = document.getElementById('starfield-canvas'),
+              starCtx = starCanvas.getContext('2d');
+
+        const dpr = window.devicePixelRatio || 1;
+        starCanvas.width = window.innerWidth * dpr;
+        starCanvas.height = window.innerHeight * dpr;
+        starCtx.scale(dpr, dpr);
+
+        let stars = [];
+        const STAR_COUNT = 600; // Reduced from 500 for better performance
+
+        class Star {
+          constructor() {
+            this.x = Math.random() * starCanvas.width;
+            this.y = Math.random() * starCanvas.height;
+            this.size = Math.random() * 2 + 0.7; // Reduced max size
+            this.speed = Math.random() * 0.6 + 0.8; // Reduced speed
+            this.opacity = Math.random();
+            this.pulseDirection = Math.random() > 0.5 ? 1 : -1;
+          }
+
+          update() {
+            this.y += this.speed;
+            if (this.y > starCanvas.height) {
+              this.y = 0;
+              this.x = Math.random() * starCanvas.width;
+            }
+
+            this.opacity += 0.008 * this.pulseDirection; // Slower pulse
+            if (this.opacity >= 1) this.pulseDirection = -1;
+            if (this.opacity <= 0.3) this.pulseDirection = 1;
+          }
+
+          draw() {
+            starCtx.beginPath();
+            starCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            starCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            starCtx.fill();
+          }
+        }
+
+        function initStars() {
+          stars = [];
+          for (let i = 0; i < STAR_COUNT; i++) {
+            stars.push(new Star());
+          }
+        }
+
+        function animateStars() {
+          starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+          stars.forEach(star => {
+            star.update();
+            star.draw();
+          });
+          requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', () => {
+          starCanvas.width = window.innerWidth * dpr;
+          starCanvas.height = window.innerHeight * dpr;
+          starCtx.scale(dpr, dpr);
+          initStars();
+        });
+
+        initStars();
+        animateStars();
+
+        // Particle animation
+        const canvas=document.getElementById('particle-canvas'),
+              ctx=canvas.getContext('2d');
+
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.scale(dpr, dpr);
+
+        let particles=[], mouse={x:null,y:null,radius:100}; // Reduced radius
+
+        window.addEventListener('mousemove',e=>(mouse.x=e.x,mouse.y=e.y));
+
+        class Particle {
+          constructor(x,y,dx,dy,size){
+            this.x = x;
+            this.y = y;
+            this.vx = dx;
+            this.vy = dy;
+            this.size = size;
+          }
+
+          draw(){
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+            ctx.fillStyle = 'rgba(240, 240, 240, 0.8)';
+            ctx.fill();
+          }
+
+          update(){
+            if(this.x>innerWidth||this.x<0) this.vx*=-1;
+            if(this.y>innerHeight||this.y<0) this.vy*=-1;
+
+            const dx=mouse.x-this.x, dy=mouse.y-this.y, dist=Math.hypot(dx,dy);
+
+            if(dist<mouse.radius+this.size){
+              const angle=Math.atan2(dy,dx), force=(mouse.radius-dist)/mouse.radius;
+              this.x-=Math.cos(angle)*force*5; // Reduced force
+              this.y-=Math.sin(angle)*force*5; // Reduced force
+            }
+
+            this.x+=this.vx;
+            this.y+=this.vy;
+            this.draw();
+          }
+        }
+
+        function initParticles(){
+          particles=[];
+          const count=Math.floor(innerWidth*innerHeight/8000); // Reduced particle count
+
+          for(let i=0;i<count;i++){
+            particles.push(new Particle(
+              Math.random()*innerWidth,
+              Math.random()*innerHeight,
+              (Math.random()-0.5)*2.5, // Reduced velocity // Modified code for higher speed:
+              (Math.random()-0.5)*2.5, // Reduced velocity
+              Math.random()*2.5+0.5 // Reduced size
+            ));
+          }
+        }
+
+        function connectParticles(){
+          particles.forEach((a,ai)=>{
+            particles.slice(ai).forEach(b=>{
+              const dx=a.x-b.x, dy=a.y-b.y, dist=dx*dx+dy*dy;
+
+              if(dist<15000){ // Reduced connection distance
+                ctx.strokeStyle = `rgba(240, 240, 240, ${1-dist/15000})`;
+                ctx.lineWidth=1.2; // Reduced line width
+                ctx.beginPath();
+                ctx.moveTo(a.x,a.y);
+                ctx.lineTo(b.x,b.y);
+                ctx.stroke();
+              }
+            });
+          });
+        }
+
+        function animate(){
+          ctx.clearRect(0,0,innerWidth,innerHeight);
+          particles.forEach(p=>p.update());
+          connectParticles();
+          requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize',()=>{
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          ctx.scale(dpr, dpr);
+          initParticles();
+        });
+
+        initParticles();
+        animate();
+      }
+    });
+  </script>
+</body>
+</html>
